@@ -2,6 +2,8 @@ import React, { Component } from "react";
 import { Link } from "react-router-dom";
 import * as BooksAPI from "./BooksAPI";
 import Book from './Book';
+import propTypes from 'prop-types'
+
 
 
 class Searchbooks extends Component {
@@ -17,22 +19,9 @@ class Searchbooks extends Component {
     }));
 
     BooksAPI.search(query, 20).then(filteredBooks => {
-      if (!filteredBooks || filteredBooks.error) {
-        this.setState({filteredBooks: []});
-        return;
-    }
-      filteredBooks = filteredBooks.map((books) => {
-        const bookOnShelf = this
-            .props
-            .books
-            .find(b => b.id === books.id);
-        books.shelf = bookOnShelf
-            ? bookOnShelf.shelf
-            : "none";
-        return books;
-    });
     this.setState({ filteredBooks });
     });
+
   };
 
   render() {
@@ -45,7 +34,6 @@ class Searchbooks extends Component {
             Close
           </Link>
           <div className="search-books-input-wrapper">
-            {}
             <input
               type="text"
               placeholder="Search by title or author"
@@ -70,6 +58,10 @@ class Searchbooks extends Component {
       </div>
     );
   }
+}
+
+Searchbooks.propTypes = {
+  moveBookTo: propTypes.func.isRequired,
 }
 
 export default Searchbooks;
