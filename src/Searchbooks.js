@@ -15,13 +15,22 @@ class Searchbooks extends Component {
 
   updateQuery = query => {
     this.setState(() => ({
-      query: query.trim()
+      query: query
     }));
 
     BooksAPI.search(query, 20).then(filteredBooks => {
-    this.setState({ filteredBooks });
+      if (!filteredBooks || filteredBooks.error) {
+        this.setState({filteredBooks: []});
+        return;
+    }
+    filteredBooks = filteredBooks.map((book) => {
+      const shelfCheck = this.props.books.find(b => b.id === book.id);
+      book.shelf = shelfCheck ? shelfCheck.shelf : "none";
+      return book;
     });
 
+    this.setState({ filteredBooks });
+    });
   };
 
   render() {
